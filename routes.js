@@ -1,5 +1,6 @@
 const express = require("express");
 const cartRoutes = express.Router();
+const pool = require("./connection");
 cartRoutes.get("/", (req, res) => {
   res.send("I'm here foo!");
 });
@@ -9,6 +10,10 @@ cartRoutes.get("/cart-items", (req, res) => {
   res.json(cartItems);
 });
 cartRoutes.get("/cart-items/:id", (req, res) => {
+  let sql = "SELECT * FROM cart-items";
+  pool.query(sql).then(result => {
+    res.json(result.rows);
+  });
   const id = parseInt(req.params.id);
   let thisItem = cartItems.find(anItem => anItem.id === id);
   if (thisItem) {
